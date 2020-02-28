@@ -220,7 +220,7 @@ namespace Euler.Solutions
 
         public static long Run()
         {
-           var l = new List<int>
+           /*var l = new List<int>
            {
                2,0,0,0,8,0,3,0,0  ,
                0,6,0,0,7,0,0,8,4  ,
@@ -236,7 +236,7 @@ namespace Euler.Solutions
            Grid g = new Grid(l);
             g.Solve();
            g.Print();
-            return 0;
+            return 0;*/
             var lines = System.IO.File.ReadAllLines("Data\\p096_sudoku.txt");
             List<Grid> Grids = new List<Grid>();
             List<int> ns = null;// = new List<int>();
@@ -260,6 +260,7 @@ namespace Euler.Solutions
             foreach (var grid in Grids)
             {
                 grid.Solve();
+                grid.Print();
             }
 
             return 0;

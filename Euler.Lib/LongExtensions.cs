@@ -271,6 +271,7 @@ namespace Euler.Lib
                 if (i.IsPrime())
                     return i;
         }
+      
     }
 }
 

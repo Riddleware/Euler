@@ -1,59 +1,108 @@
+using System;
 using Euler.Lib;
 using Euler.Solutions;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Euler.Tests
 {
     [TestFixture]
     public partial class SolutionTests
     {
+        void BaseTest(ISolution<long[], long> s, long[] p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+
+        void BaseTest(ISolution<long, long> s, long p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+
+        void BaseTest(ISolution<int, long> s, int p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+        void BaseTest(ISolution<int, string> s, int p, string res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+        void BaseTest(ISolution<bool, long> s, long res)
+        {
+            Assert.That(s.Run(true), Is.EqualTo(res));
+        }
+
+        void BaseTest(ISolution<bool, string> s, string res)
+        {
+            Assert.That(s.Run(true), Is.EqualTo(res));
+        }
+
+        void BaseTest(ISolution<char[], long> s, char[] p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+
+        void BaseTest(ISolution<List<string>, string> s, List<string> p, string res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+        void BaseTest(ISolution<List<string>, long> s, List<string> p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+        void BaseTest(ISolution<Tuple<MatrixInt, int>, long> s, Tuple<MatrixInt, int> p, long res)
+        {
+            Assert.That(s.Run(p), Is.EqualTo(res));
+        }
+
         [Test]
         public void Test_0001()
         {
-            Assert.That(Solution._1(new long[] { 0, 999 }), Is.EqualTo(233168));
+            BaseTest(new _1(), new long[]{0,999}, 233168);
         }
 
         [Test]
         public void Test_0002()
         {
-            Assert.That(Solution._2(new long[] { 4000000 }), Is.EqualTo(4613732));
+            BaseTest(new _2(), new long[] { 4000000 }, 4613732);
         }
 
         [Test]
         public void Test_0003()
         {
-            Assert.That(Solution._3(new long[] { 600851475143 }), Is.EqualTo(6857));
+            BaseTest(new _3(), new long[] { 600851475143 }, 6857);
         }
 
         [Test]
         public void Test_0004()
         {
-            Assert.That(Solution._4(), Is.EqualTo(906609));
+            BaseTest(new _4(), 0, 906609);
         }
 
         [Test]
         public void Test_0005()
         {
-            Assert.That(Solution._5(20), Is.EqualTo(232792560));
+            BaseTest(new _5(), 20, 232792560);
+            
         }
 
         [Test]
         public void Test_0006()
         {
-            Assert.That(Solution._6(100), Is.EqualTo(25164150));
+            BaseTest(new _6(), 100, 25164150);
         }
 
         [Test]
         public void Test_0007()
         {
-            Assert.That(Solution._7(10001), Is.EqualTo(104743));
+            BaseTest(new _7(), 10001, 104743);
         }
 
         [Test]
         public void Test_0008()
         {
-            Assert.That(Solution._8(("73167176531330624919225119674426574742355349194934" +
+            BaseTest(new _8(),("73167176531330624919225119674426574742355349194934" +
                                       "96983520312774506326239578318016984801869478851843" +
                                       "85861560789112949495459501737958331952853208805511" +
                                       "12540698747158523863050715693290963295227443043557" +
@@ -72,20 +121,19 @@ namespace Euler.Tests
                                       "07198403850962455444362981230987879927244284909188" +
                                       "84580156166097919133875499200524063689912560717606" +
                                       "05886116467109405077541002256983155200055935729725" +
-                                      "71636269561882670428252483600823257530420752963450").ToCharArray(), 13),
-                Is.EqualTo(23514624000));
+                                      "71636269561882670428252483600823257530420752963450").ToCharArray(), 23514624000);
         }
 
         [Test]
         public void Test_0009()
         {
-            Assert.That(Solution._9(), Is.EqualTo(31875000));
+            BaseTest(new _9(), 31875000);
         }
 
         [Test]
         public void Test_0010()
         {
-            Assert.That(Solution._10(), Is.EqualTo(142913828922));
+            BaseTest(new _10(), 142913828922);
         }
 
         [Test]
@@ -114,14 +162,15 @@ namespace Euler.Tests
                 new List<int>() {20, 73, 35, 29, 78, 31, 90, 01, 74, 31, 49, 71, 48, 86, 81, 16, 23, 57, 05, 54},
                 new List<int>() {01, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 01, 89, 19, 67, 48}
             };
+            var t = new Tuple<MatrixInt, int> (item1:matrix, item2:4);
 
-            Assert.That(Solution._11(matrix, 4), Is.EqualTo(70600674));
+            BaseTest(new _11(), t, 70600674);
         }
 
         [Test]
         public void Test_0012()
         {
-            Assert.That(Solution._12(), Is.EqualTo(76576500));
+            BaseTest(new _12(), 76576500);
         }
 
         [Test]
@@ -229,43 +278,43 @@ namespace Euler.Tests
                 "20849603980134001723930671666823555245252804609722",
                 "53503534226472524250874054075591789781264330331690"
             };
-            Assert.That(Solution._13(numbers), Is.EqualTo("5537376230"));
+            BaseTest(new _13(), numbers, "5537376230");
         }
 
         [Test]
         public void Test_0014()
         {
-            Assert.That(Solution._14(), Is.EqualTo(837799));
+            BaseTest(new _14(), 837799);
         }
 
         [Test]
         public void Test_0015()
         {
-            Assert.That(Solution._15(20), Is.EqualTo(137846528820));
+            BaseTest(new _15(), 20, 137846528820);
         }
 
         [Test]
         public void Test_0016()
         {
-            Assert.That(Solution._16(1000), Is.EqualTo(1366));
+            BaseTest(new _16(), 1000, 1366);
         }
 
         [Test]
         public void Test_0017()
         {
-            Assert.That(Solution._17(1000), Is.EqualTo(21124));
+            BaseTest(new _17(), 1000, 21124);
         }
 
         [Test]
         public void Test_0019()
         {
-            Assert.That(Solution._19(), Is.EqualTo(171));
+            BaseTest(new _19(), 171);
         }
 
         [Test]
         public void Test_0020()
         {
-            Assert.That(Solution._20(100), Is.EqualTo(648));
+            BaseTest(new _20(), 100, 648);
         }
     }
 }

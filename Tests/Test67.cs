@@ -17,7 +17,7 @@ namespace Euler.Tests
                      new List<int> {8, 5, 9, 3 }
             };
 
-            Assert.That(Solution._18_67(a), Is.EqualTo(23));
+            Assert.That(new _18().Run(a), Is.EqualTo(23));
 
             a = new List<List<int>>
                 {      new List<int>    {                  75,                          },     //1
@@ -36,7 +36,7 @@ namespace Euler.Tests
                        new List<int>    {    63,66,04,68,89,53,67,30,73,16,69,87,40,31, },    //14
                        new List<int>    {   04,62,98,27,23,09,70,98,73,93,38,53,60,04,23 } ,     //15
                 };
-            Assert.That(Solution._18_67(a), Is.EqualTo(1074));
+            Assert.That(new _18().Run(a), Is.EqualTo(1074));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace Euler.Tests
                     new List<int> {23,33,44,81,80,92,93,75,94,88,23,61,39,76,22,03,28,94,32,06,49,65,41,34,18,23,08,47,62,60,03,63,33,13,80,52,31,54,73,43,70,26,16,69,57,87,83,31,03,93,70,81,47,95,77,44,29,68,39,51,56,59,63,07,25,70,07,77,43,53,64,03,94,42,95,39,18,01,66,21,16,97,20,50,90,16,70,10,95,69,29,06,25,61,41,26,15,59,63,35,},
                 };
 
-            Assert.That(Solution._18_67(a), Is.EqualTo(7273));
+            Assert.That(new _67().Run(a), Is.EqualTo(7273));
         }
     }
 }
