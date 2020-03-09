@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ExceptionServices;
-using System.Text;
 
 namespace Euler.Solutions
 {
@@ -11,14 +9,41 @@ namespace Euler.Solutions
         public class Cell
         {
             private Grid _Grid;
-            private int X { get; set; }
-            private int Y { get; set; }
+            public int X { get; set; }
+            public int Y { get; set; }
             public int Value { get; set; }
 
-            private List<int> poss;
-            private List<Cell> Row;
-            private List<Cell> Col;
-            private List<Cell> Box;
+            public List<int> poss= new List<int>();
+            protected List<Cell> Row;
+            protected List<Cell> Col;
+            protected List<Cell> Box;
+
+            public Cell(Grid p, Cell c)
+            {
+                _Grid = p;
+                X = c.X;
+                Y = c.Y;
+                Value = c.Value;
+
+                poss = new List<int>();
+                poss.AddRange(c.poss);                
+            }
+
+            public bool Check()
+            {
+                bool valid = true;
+
+                for (int i = 1; i < 10; i++)
+                {
+                    if (Row.Find(c => c.Value == i) == null
+                        || Col.Find(c => c.Value == i) == null
+                        || Box.Find(c => c.Value == i) == null
+                        )
+                        return false;
+                }
+
+                return valid;
+            }
 
             public Cell(Grid grid, int x, int y, int value)
             {
@@ -29,21 +54,22 @@ namespace Euler.Solutions
 
                 if (value == 0)
                 {
-                    poss = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9};
+                    poss = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 }
             }
 
-            public void FirstPass()
+            public bool Solve()
             {
-                if (this.Value!=0)
-                    return;
-
-                if (this.Row == null)
+                if (Row == null)
                 {
                     Row = _Grid.GetRow(X, Y);
                     Col = _Grid.GetCol(X, Y);
                     Box = _Grid.GetBox(X, Y);
                 }
+
+                bool somethingChanged = false;
+                if (Value != 0)
+                    return false;                
 
                 for (int i = 1; i < 10; i++)
                 {
@@ -67,36 +93,118 @@ namespace Euler.Solutions
                     }
 
                     if (poss.Count == 1)
-                        Value = poss[0];
-                    else
                     {
-                        for (int p = 0; p < poss.Count; p++)
-                        {
-                            foreach (var c in Row.Where(z => z != this))
-                            {
+                        Value = poss[0];
+                        somethingChanged = true;
+                    }
+                }
 
+                if (Value == 0)
+                {
+                    for (int p = 0; p < poss.Count; p++)
+                    {
+                        bool canHave = false;
+
+                        foreach (var c in Row.Where(z => z != this))
+                            if (c.CanHave(poss[p]))
+                            {
+                                canHave = true;
+                                break;
                             }
+                        if (canHave)
+                        {
+                            canHave = false;
+                            foreach (var c in Col.Where(z => z != this))
+                                if (c.CanHave(poss[p]))
+                                {
+                                    canHave = true;
+                                    break;
+                                }
+                        }
+                        if (canHave)
+                        {
+                            canHave = false;
+                            foreach (var c in Box.Where(z => z != this))                            
+                                if (c.CanHave(poss[p]))
+                                {
+                                    canHave = true;
+                                    break;
+                                }
+                        }
+                        if (!canHave)
+                        {
+                            Value = poss[p];
+                            somethingChanged = true;
+                            break;
                         }
                     }
                 }
+
+                return somethingChanged;
+            }
+
+            bool CanHave(int i)
+            {
+                if (Row == null)
+                {
+                    Row = _Grid.GetRow(X, Y);
+                    Col = _Grid.GetCol(X, Y);
+                    Box = _Grid.GetBox(X, Y);
+                }
+
+                if (Value != 0)
+                    return false;
+
+                if (Row.Find(t => t.Value == i) != null
+                    || Col.Find(t => t.Value == i) != null
+                    || Box.Find(t => t.Value == i) != null)                
+                    return false;
+
+                return true;
             }
         }
 
         public class Grid : List<List<Cell>>
         {
+            public Grid(Grid c)
+            {
+                foreach (var row in c)
+                {
+                    var r = new List<Cell>();
+                    foreach (var cell in row)
+                        r.Add(new Cell(this, cell));
+                    Add(r);
+                }
+            }
+
+            public Grid() : base() { }
+
+            protected void Equals(Grid c)
+            {
+                foreach (var row in c)
+                    foreach (var cell in row)
+                        this[cell.X][cell.Y] = cell;
+            }
+
             public Grid(List<int> nums) : base()
             {
                 for (int i = 0; i < 81; i++)
                 {
                     if (i % 9 == 0)
-                    {
-                        this.Add(new List<Cell>());
-                    }
+                        Add(new List<Cell>());
 
-                    this[i/9].Add(new Cell(this, i / 9, i % 9, nums[i]));
+                    this[i / 9].Add(new Cell(this, i / 9, i % 9, nums[i]));
                 }
+            }
 
-              //  Solve();
+            public bool Check()
+            {
+                foreach (var row in this)                
+                    foreach (var cell in row)
+                        if (!cell.Check())
+                            return false;
+
+                return true;
             }
 
             public List<Cell> GetRow(int x, int y)
@@ -106,69 +214,77 @@ namespace Euler.Solutions
 
             public List<Cell> GetCol(int x, int y)
             {
-                var col=new List<Cell>();
+                var col = new List<Cell>();
                 foreach (var row in this)
-                {
                     col.Add(row[y]);
-                }
+                
                 return col;
             }
 
             public List<Cell> GetBox(int x, int y)
             {
                 var box = new List<Cell>();
-                switch (x % 3)
-                {
-                    case 0:
-                        GetColBox(x);
-                        GetColBox(x + 1);
-                        GetColBox(x + 2);
-                        break;
-                    case 1:
-                        GetColBox(x - 1);
-                        GetColBox(x);
-                        GetColBox(x + 1);
-                        break;
-                    case 2:
-                        GetColBox(x - 2);
-                        GetColBox(x - 1);
-                        GetColBox(x);
-                        break;
-                }
+                var xMod = x % 3;
+                
+                GetColBox(x - xMod);
+                GetColBox(x - xMod + 1);
+                GetColBox(x - xMod + 2);                        
 
                 return box;
 
                 void GetColBox(int lineNum)
                 {
-                    switch (y % 3)
-                    {
-                        case 0:
-                            box.Add(this[lineNum][y]);
-                            box.Add(this[lineNum][y + 1]);
-                            box.Add(this[lineNum][y + 2]);
-                            break;
-                        case 1:
-                            box.Add(this[lineNum][y - 1]);
-                            box.Add(this[lineNum][y]);
-                            box.Add(this[lineNum][y + 1]);
-                            break;
-                        case 2:
-                            box.Add(this[lineNum][y - 2]);
-                            box.Add(this[lineNum][y - 1]);
-                            box.Add(this[lineNum][y]);
-                            break;
-                    }
+                    var yMod = y % 3;
+                    
+                    box.Add(this[lineNum][y - yMod]);
+                    box.Add(this[lineNum][y - yMod + 1]);
+                    box.Add(this[lineNum][y - yMod + 2]);                            
                 }
             }
 
-            public void Solve()
+            public bool SolveSimple()
             {
-                while (!Solved())
+                bool somethingChanged = false;
+                do
                 {
+                    somethingChanged = false;
                     foreach (var row in this)
-                        foreach (var col in row)
-                            col.FirstPass();
+                        foreach (var cell in row)
+                        {
+                            if (cell.Solve())
+                                somethingChanged = true;
+                        }
+                } while (!Solved() && somethingChanged);
+
+                return somethingChanged;               
+            }
+
+            bool SolveWithGuesswork()
+            {
+                var emptyCells = new List<Cell>();
+                foreach (var row in this)
+                {
+                    emptyCells.AddRange(row.FindAll(r => r.Value == 0));
                 }
+
+                foreach (var cell in emptyCells)
+                    foreach (var pos in cell.poss)
+                    {
+                        var copy = new Grid(this);
+                        copy[cell.X][cell.Y].Value = pos;
+                        if (copy.SolveSimple() && copy.Check())
+                        {
+                            this.Equals(copy);
+                            return true;
+                        }
+                    }
+
+                return false;
+            }
+
+            public bool Solve()
+            {
+                return SolveSimple() || SolveWithGuesswork();
             }
 
             bool Solved()
@@ -194,49 +310,28 @@ namespace Euler.Solutions
                     Console.WriteLine(r);
                 }
             }
-
-            public List<int> Flatten()
-            {
-                var ret = new List<int>();
-                foreach (var row in this)
-                {
-                    foreach (var col in row)
-                    {
-                        ret.Add(col.Value);
-                    }
-                }
-
-                return ret;
-            }
-        }
-
-        public static List<int> Run(List<int> l)
-        {
-            Grid g = new Grid(l);
-            g.Solve();
-            g.Print();
-            return g.Flatten();
         }
 
         public static long Run()
         {
-           var l = new List<int>
-           {
-               2,0,0,0,8,0,3,0,0  ,
-               0,6,0,0,7,0,0,8,4  ,
-               0,3,0,5,0,0,2,0,9  ,
-               0,0,0,1,0,5,4,0,8  ,
-               0,0,0,0,0,0,0,0,0  ,
-               4,0,2,7,0,6,0,0,0  ,
-               3,0,1,0,0,7,0,4,0  ,
-               7,2,0,0,4,0,0,6,0  ,
-               0,0,4,0,1,0,0,0,3
-           };
-          
-           Grid g = new Grid(l);
-            g.Solve();
-           g.Print();
-            return 0;
+         //  var l = new List<int>
+         //  {
+         //       0,0,1,0,0,7,0,9,0,
+         //       5,9,0,0,8,0,0,0,1,
+         //       0,3,0,0,0,0,0,8,0,
+         //       0,0,0,0,0,5,8,0,0,
+         //       0,5,0,0,6,0,0,2,0,
+         //       0,0,4,1,0,0,0,0,0,
+         //       0,8,0,0,0,0,0,3,0,
+         //       1,0,0,0,2,0,0,7,9,
+         //       0,2,0,7,0,0,4,0,0
+         //  };
+         // 
+         //  Grid g = new Grid(l);
+         //   g.Solve();
+         //  // if (!g.Check())
+         //       g.Print();
+         //   return 0;
             var lines = System.IO.File.ReadAllLines("Data\\p096_sudoku.txt");
             List<Grid> Grids = new List<Grid>();
             List<int> ns = null;// = new List<int>();
@@ -256,13 +351,15 @@ namespace Euler.Solutions
             }
 
             Grids.Add(new Grid(ns));
-
+            
+            long res = 0;
             foreach (var grid in Grids)
-            {
-                grid.Solve();
+            {              
+                grid.Solve();                                             
+                res += long.Parse($"{grid[0][0].Value}{grid[0][1].Value}{grid[0][2].Value}");                
             }
 
-            return 0;
+            return res;//24702
         }
     }
 }
