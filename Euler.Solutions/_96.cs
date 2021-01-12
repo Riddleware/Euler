@@ -312,6 +312,11 @@ namespace Euler.Solutions
             }
         }
 
+        public static List<int> Run(List<int> l)
+        {
+            throw new NotImplementedException();
+        }
+
         public static long Run()
         {
 
