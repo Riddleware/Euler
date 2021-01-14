@@ -40,8 +40,8 @@ namespace Euler.Tests
         [Test]
         public void Test_0040()
         {
-            Assert.That(true, Is.EqualTo(false));
-            //Assert.That(_40().Run, Is.EqualTo(443839));
+            //Assert.That(true, Is.EqualTo(false));
+            Assert.That(_40.Run(), Is.EqualTo(210));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace Euler.Tests
         [Test]
         public void Test_0033()
         {
-            Assert.That(true, Is.EqualTo(false));
-            //Assert.That(_33.Run(), Is.EqualTo(443839));
+            //Assert.That(true, Is.EqualTo(false));
+            Assert.That(_33.Run(), Is.EqualTo(100));// 443839));
         }
         [Test]
         public void Test_0032()
