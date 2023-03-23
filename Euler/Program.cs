@@ -10,7 +10,7 @@ namespace Euler
 
         static void Main(string[] args)
         {
-            Console.WriteLine(_96.Run());
+            Console.WriteLine(new _112().Run());
             //System.IO.File.AppendAllText("C:\\STUFF\\12.txt", _13(numbers));
             Console.ReadKey();
             return;

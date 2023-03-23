@@ -1,4 +1,6 @@
-﻿namespace Euler.Lib
+﻿using System.Collections.Generic;
+
+namespace Euler.Lib
 {
     public static class StringExtensions
     {
@@ -51,6 +53,19 @@
             {
                 if (!num.Contains(i.ToString()))
                     return false;
+            }
+
+            return true;
+        }
+
+        public static bool AllUniqueChars(this string s)
+        {
+            Dictionary<char, char> d = new Dictionary<char, char>();
+            foreach (char c in s)
+            {
+                if (d.ContainsKey(c))
+                    return false;
+                d.Add(c,c);
             }
 
             return true;
