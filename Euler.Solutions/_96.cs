@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 
 namespace Euler.Solutions
 {
-    public class _96
+    public class _96 : ISolution<int, long>
     {
         public class Cell
         {
@@ -252,10 +255,16 @@ namespace Euler.Solutions
                         foreach (var cell in row)
                         {
                             if (cell.Solve())
+                            {
                                 somethingChanged = true;
+                                Print();
+                                Thread.Sleep(1000);
+                            }
                         }
                 } while (!Solved() && somethingChanged);
 
+                Print();
+                Thread.Sleep(1000);
                 return somethingChanged;               
             }
 
@@ -270,13 +279,16 @@ namespace Euler.Solutions
                 foreach (var cell in emptyCells)
                     foreach (var pos in cell.poss)
                     {
+                        Print();
                         var copy = new Grid(this);
                         copy[cell.X][cell.Y].Value = pos;
                         if (copy.SolveSimple() && copy.Check())
                         {
                             this.Equals(copy);
+                            Print();
                             return true;
                         }
+                        Thread.Sleep(1000);
                     }
 
                 return false;
@@ -297,8 +309,10 @@ namespace Euler.Solutions
                 return true;
             }
 
+            private int pp = 0;
             public void Print()
             {
+                Console.WriteLine($"{(char)169}-------------{(char)170}");
                 foreach (var row in this)
                 {
                     string r = "";
@@ -309,6 +323,8 @@ namespace Euler.Solutions
 
                     Console.WriteLine(r);
                 }
+                Console.WriteLine(string.Format("{0}-------------{1}", (char)192, (char)217));
+                Console.WriteLine($"==={pp++}++++++++");
             }
         }
 
@@ -317,9 +333,21 @@ namespace Euler.Solutions
             throw new NotImplementedException();
         }
 
-        public static long Run()
+        void PrintAsc()
         {
+            Console.OutputEncoding = System.Text.Encoding.GetEncoding(28591);
+            for (int i = 32; i < 1000; i++)
+            {
+                if (i % 10 ==0)
+                    Console.WriteLine();
+                Console.Write($"{i} {(char)i} ");
+            }
+        }
 
+        public long Run(int _ = 0)
+        {
+           // PrintAsc();
+           //     return 0;
            /*var l = new List<int>
            {
                2,0,0,0,8,0,3,0,0  ,
@@ -357,7 +385,7 @@ namespace Euler.Solutions
          //       g.Print();
          //   return 0;
 
-            var lines = System.IO.File.ReadAllLines("Data\\p096_sudoku.txt");
+            var lines = System.IO.File.ReadAllLines(Path.Combine("Data", "p096_sudoku.txt"));
             List<Grid> Grids = new List<Grid>();
             List<int> ns = null;// = new List<int>();
             foreach (var line in lines)
@@ -378,6 +406,9 @@ namespace Euler.Solutions
             Grids.Add(new Grid(ns));
             
             long res = 0;
+            Grids[0].Solve();
+            Console.ReadKey();
+            return 111;
             foreach (var grid in Grids)
             {           
                 grid.Solve();     

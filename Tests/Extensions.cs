@@ -131,7 +131,6 @@ namespace Euler.Tests
         [TestCase(70, 33)]
         [TestCase(80, 34)]
         [TestCase(90, 35)]
-
         [TestCase(100, 36)]
         [TestCase(200, 37)]
         [TestCase(300, 38)]
@@ -146,8 +145,5 @@ namespace Euler.Tests
         {
             Assert.That(NumWordCount.Count(n),Is.EqualTo(expected[e]));
         }
-
-
-
     }
 }

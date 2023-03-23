@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 
 namespace Euler.Lib
@@ -37,6 +38,7 @@ namespace Euler.Lib
                     return false;
                 temp = temp.TruncR();
             }
+
             Console.WriteLine(l);
             return true;
         }
@@ -49,6 +51,7 @@ namespace Euler.Lib
                 s = s.Insert(0, (l % 2).ToString());
                 l /= 2;
             }
+
             return s;
         }
 
@@ -59,6 +62,7 @@ namespace Euler.Lib
             {
                 res *= l--;
             }
+
             return res;
         }
 
@@ -78,8 +82,8 @@ namespace Euler.Lib
             if (ret >= 1000)
             {
                 decimal nD = ret / 1000M;
-                ret = (long)nD;
-                ret = (long)((nD - ret) * 1000);
+                ret = (long) nD;
+                ret = (long) ((nD - ret) * 1000);
             }
 
             return ret;
@@ -91,13 +95,13 @@ namespace Euler.Lib
             if (ret >= 10)
             {
                 decimal nD = ret / 10M;
-                ret = (long)nD;
-                ret = (long)((nD - ret) * 10);
+                ret = (long) nD;
+                ret = (long) ((nD - ret) * 10);
             }
 
             return ret;
         }
-        
+
         public static int CollatzChainCount(this long n)
         {
             int ret = 0;
@@ -105,7 +109,7 @@ namespace Euler.Lib
             if (n == 1)
                 return 1;
             ret++;
-            long res = n % 2 ==0?n/2:3*n+1;
+            long res = n % 2 == 0 ? n / 2 : 3 * n + 1;
 
             ret += res.CollatzChainCount();
 
@@ -114,7 +118,7 @@ namespace Euler.Lib
 
         public static int ToInt(this char c)
         {
-            return c - 48;           
+            return c - 48;
         }
 
         public static bool IsAbundant(this long n)
@@ -179,7 +183,7 @@ namespace Euler.Lib
                     else // Otherwise print both 
                     {
                         ret.Add(i);
-                        ret.Add (n / i);
+                        ret.Add(n / i);
                     }
                 }
             }
@@ -224,6 +228,7 @@ namespace Euler.Lib
             {
                 nP = nP.GetNextPrime();
             }
+
             ret.Add(nP);
 
             var rem = l / nP;
@@ -235,7 +240,7 @@ namespace Euler.Lib
         }
 
         public static bool IsPalindrome(this long p)
-        {       
+        {
             return p.ToString().IsPalindrome();
         }
 
@@ -248,7 +253,6 @@ namespace Euler.Lib
         {
             if (p < 0)
                 return false;
-
             if (p == 2 || p == 5)
                 return true;
             if (p == 1 || p % 2 == 0 || p % 5 == 0)
@@ -256,8 +260,10 @@ namespace Euler.Lib
 
             long sP = (int) Math.Sqrt(p);
 
-            for (long i = 3; i <= sP; i++)
+            for (long i = 3; i <= sP; i+=2)
             {
+                //if (i % 5 == 0)
+                  //  continue;
                 if (p % i == 0)
                     return false;
             }
@@ -271,7 +277,31 @@ namespace Euler.Lib
                 if (i.IsPrime())
                     return i;
         }
-      
+
+        public static bool SameDigitsAs(this long a, long b)
+        {
+            var sa = a.ToString();
+            var sb = b.ToString();
+
+            if (sa.Length != sb.Length)
+                return false;
+
+            foreach (var c in sa)
+            {
+                if (!sb.Contains(c))
+                {
+                    return false;
+                }
+            }
+
+            foreach (var c in sb)
+            {
+                if (!sa.Contains(c))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
 

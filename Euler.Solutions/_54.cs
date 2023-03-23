@@ -325,7 +325,7 @@ namespace Euler.Solutions
         public static long Run()
         {
             long res = 0;
-            var lines = File.ReadAllLines("Data\\p054_poker.txt");
+            var lines = File.ReadAllLines(Path.Combine("Data", "p054_poker.txt"));
             foreach (var line in lines)
             {
                 Hand h1 = new Hand(line.Substring(0,14));
