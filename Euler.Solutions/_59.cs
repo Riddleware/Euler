@@ -34,7 +34,6 @@ namespace Euler.Solutions
 
             long Combine()
             {
-                long ret = 0;
                 var tx = new List<byte>();
 
                 for (int i = 0; i < t1.Count; i++)
@@ -44,14 +43,21 @@ namespace Euler.Solutions
                     tx.Add((byte) (t3[i] ^ x3));
                 }
 
+                Write(tx);
+
+                Console.WriteLine("");
+                Console.WriteLine($"{(char)x1}{(char)x2}{(char)x3}");
+                return tx.Sum(b => b);
+            }
+
+            void Write(List<byte> tx)
+            {
                 foreach (var l in tx)
                 {
-                    ret += l;
                     Console.Write((char) l);
                 }
-
-                return ret;
             }
+            
 
             List<Pair<byte, int>> GetFrequencies(List<byte> t)
             {
